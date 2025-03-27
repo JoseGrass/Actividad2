@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Men&uacute;s Semanales</title>
-    <link rel="stylesheet" href="styles.css?v=1.0">
-
+    <title>Generador de Menú Semanal</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Generador de Men&uacute;s Semanales</h1>
+    <h1>Generador de Menú Semanal</h1>
+
+    <!-- Formulario para preferencias -->
     <form id="preferences-form">
         <label>
             <input type="checkbox" id="vegetariano"> Vegetariano
         </label>
+        <br>
         <label>
             <input type="checkbox" id="sin-gluten"> Sin Gluten
         </label>
-        <label>
-            Calor&iacute;as m&aacute;ximas:
-            <input type="number" id="calorias" placeholder="Ej: 500">
-        </label>
-        <button type="submit">Generar Men&uacute;</button>
+        <br>
+        <label for="calorias">Calorías máximo:</label>
+        <input type="number" id="calorias" min="1" placeholder="Ejemplo: 500">
+        <br>
+        <button type="submit">Generar Menú</button>
     </form>
-    <div id="menu-container"></div>
-    <button id="export-button">Exportar Ingredientes</button>
 
-    <!-- Declaro el script como módulo -->
-    <script src="app.js" type="module"></script>
+    <!-- Contenedor donde se mostrará el menú -->
+    <div id="menu-container"></div>
+
+    <script src="app.js"></script>
 </body>
 </html>
