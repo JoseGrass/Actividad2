@@ -70,13 +70,17 @@ async function loadTasks() {
                 <p>${task.descripcion}</p>
                 <small>${task.fecha}</small>
                 <p><strong>Estado:</strong> <span id="estado-${taskId}" class="task-status">${task.estado}</span></p>
-                <button onclick="deleteTask('${taskId}')">Eliminar</button>
+                <button class="delete-button" data-id="${taskId}">Eliminar</button>
             `;
             
             // Asignar el event listener para cambiar el estado de la tarea
             const statusSpan = taskItem.querySelector(`#estado-${taskId}`);
             statusSpan.addEventListener('click', () => updateTaskStatus(taskId, statusSpan));
-            
+
+            // Asignar el event listener para eliminar la tarea
+            const deleteButton = taskItem.querySelector('.delete-button');
+            deleteButton.addEventListener('click', () => deleteTask(taskId));
+
             taskList.appendChild(taskItem);
         });
     } catch (e) {
@@ -115,4 +119,3 @@ async function deleteTask(taskId) {
 
 // Cargar las tareas cuando se carga la página
 loadTasks();
-
