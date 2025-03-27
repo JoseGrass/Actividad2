@@ -3,12 +3,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
 import { getFirestore, collection, addDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCuhjOhK_-PJIupYsWUS9lrbcktYM31lsw",
+  authDomain: "actividad2-7d652.firebaseapp.com",
+  projectId: "actividad2-7d652",
+  storageBucket: "actividad2-7d652.firebasestorage.app",
+  messagingSenderId: "766228565196",
+  appId: "1:766228565196:web:382b4fc923a284e0e5c669",
+  measurementId: "G-N85D542R3X"
 };
 
 const app = initializeApp(firebaseConfig);
