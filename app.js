@@ -6,7 +6,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyCuhjOhK_-PJIupYsWUS9lrbcktYM31lsw",
     authDomain: "actividad2-7d652.firebaseapp.com",
     projectId: "actividad2-7d652",
-    storageBucket: "actividad2-7d652.appspot.com", // Revisión del storageBucket
+    storageBucket: "actividad2-7d652.appspot.com",
     messagingSenderId: "766228565196",
     appId: "1:766228565196:web:382b4fc923a284e0e5c669",
     measurementId: "G-N85D542R3X"
@@ -32,14 +32,20 @@ form.addEventListener('submit', async (e) => {
 
 async function generarMenu(vegetariano, sinGluten, calorias) {
     const platos = await obtenerPlatos();
-    return platos
+    console.log("Platos obtenidos de Firebase:", platos);  // Para depuración
+
+    // Filtrar platos según los criterios seleccionados
+    const menu = platos
         .filter(plato =>
             (!vegetariano || plato.vegetariano) &&
             (!sinGluten || plato.sinGluten) &&
             (!calorias || plato.calorias <= calorias)
-        )
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 7);
+        );
+    console.log("Platos después de aplicar filtros:", menu);  // Para depuración
+
+    return menu
+        .sort(() => 0.5 - Math.random())  // Mezclar platos aleatoriamente
+        .slice(0, 7);  // Limitar a 7 platos
 }
 
 function mostrarMenu(menu) {
@@ -63,7 +69,9 @@ async function obtenerPlatos() {
     try {
         const q = query(collection(db, 'platos'));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => doc.data());
+        const platos = querySnapshot.docs.map(doc => doc.data());
+        console.log("Platos obtenidos de Firebase:", platos);  // Para depuración
+        return platos;
     } catch (e) {
         console.error("❌ Error obteniendo los platos: ", e);
         return [];
