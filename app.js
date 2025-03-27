@@ -4,12 +4,12 @@ import { getFirestore, collection, addDoc, query, getDocs } from "https://www.gs
 
 const firebaseConfig = {
     apiKey: "AIzaSyCuhjOhK_-PJIupYsWUS9lrbcktYM31lsw",
-  authDomain: "actividad2-7d652.firebaseapp.com",
-  projectId: "actividad2-7d652",
-  storageBucket: "actividad2-7d652.firebasestorage.app",
-  messagingSenderId: "766228565196",
-  appId: "1:766228565196:web:382b4fc923a284e0e5c669",
-  measurementId: "G-N85D542R3X"
+    authDomain: "actividad2-7d652.firebaseapp.com",
+    projectId: "actividad2-7d652",
+    storageBucket: "actividad2-7d652.appspot.com", // Revisión del storageBucket
+    messagingSenderId: "766228565196",
+    appId: "1:766228565196:web:382b4fc923a284e0e5c669",
+    measurementId: "G-N85D542R3X"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -43,19 +43,29 @@ async function generarMenu(vegetariano, sinGluten, calorias) {
 }
 
 function mostrarMenu(menu) {
+    if (menu.length === 0) {
+        menuContainer.innerHTML = "<p>No se encontraron platos con esos criterios.</p>";
+        return;
+    }
     menuContainer.innerHTML = menu.map(plato => `<p>${plato.nombre}</p>`).join('');
 }
 
 async function guardarMenu(menu) {
     try {
         await addDoc(collection(db, 'menus'), { menu, fecha: new Date().toISOString() });
+        console.log("✅ Menú guardado exitosamente.");
     } catch (e) {
-        console.error('Error guardando el menu: ', e);
+        console.error('❌ Error guardando el menú: ', e);
     }
 }
 
 async function obtenerPlatos() {
-    const q = query(collection(db, 'platos'));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => doc.data());
+    try {
+        const q = query(collection(db, 'platos'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => doc.data());
+    } catch (e) {
+        console.error("❌ Error obteniendo los platos: ", e);
+        return [];
+    }
 }
