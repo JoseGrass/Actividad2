@@ -1,6 +1,6 @@
 // Configuración de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 // Configuración de Firebase (reemplaza con tus credenciales)
 const firebaseConfig = {
@@ -43,6 +43,7 @@ async function addTask(title, description) {
         await addDoc(collection(db, 'tareas'), {
             titulo: title,
             descripcion: description,
+            estado: 'Pendiente',
             fecha: new Date().toISOString()
         });
         console.log("Tarea agregada!");
@@ -58,9 +59,21 @@ async function loadTasks() {
         taskList.innerHTML = '';
         querySnapshot.forEach(doc => {
             const task = doc.data();
+            const taskId = doc.id;
             const taskItem = document.createElement('div');
             taskItem.classList.add('task-item');
-            taskItem.innerHTML = `<h3>${task.titulo}</h3><p>${task.descripcion}</p><small>${task.fecha}</small>`;
+            taskItem.innerHTML = `
+                <h3>${task.titulo}</h3>
+                <p>${task.descripcion}</p>
+                <small>Fecha: ${task.fecha}</small>
+                <p>Estado: ${task.estado}</p>
+                <select onchange="updateTaskStatus('${taskId}', this.value)">
+                    <option value="Pendiente" ${task.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                    <option value="En Proceso" ${task.estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
+                    <option value="Completado" ${task.estado === 'Completado' ? 'selected' : ''}>Completado</option>
+                </select>
+                <button onclick="deleteTask('${taskId}')">Eliminar</button>
+            `;
             taskList.appendChild(taskItem);
         });
     } catch (e) {
@@ -68,5 +81,29 @@ async function loadTasks() {
     }
 }
 
+// Función para actualizar el estado de una tarea
+async function updateTaskStatus(taskId, newStatus) {
+    try {
+        const taskRef = doc(db, 'tareas', taskId);
+        await updateDoc(taskRef, { estado: newStatus });
+        console.log("Estado de tarea actualizado a:", newStatus);
+    } catch (e) {
+        console.error("Error al actualizar estado: ", e);
+    }
+}
+
+// Función para eliminar una tarea
+async function deleteTask(taskId) {
+    try {
+        const taskRef = doc(db, 'tareas', taskId);
+        await deleteDoc(taskRef);
+        console.log("Tarea eliminada con ID:", taskId);
+        loadTasks();  // Recargar las tareas después de eliminar
+    } catch (e) {
+        console.error("Error al eliminar tarea: ", e);
+    }
+}
+
 // Cargar las tareas cuando se carga la página
 loadTasks();
+
