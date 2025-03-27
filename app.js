@@ -1,6 +1,6 @@
 // Configuración de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 // Configuración de Firebase (reemplaza con tus credenciales)
 const firebaseConfig = {
@@ -20,6 +20,7 @@ const db = getFirestore(app);
 const taskForm = document.getElementById('task-form');
 const taskTitle = document.getElementById('task-title');
 const taskDescription = document.getElementById('task-description');
+const taskStatus = document.getElementById('task-status');
 const taskList = document.getElementById('task-list');
 
 // Evento para agregar tarea
@@ -28,22 +29,24 @@ taskForm.addEventListener('submit', async (e) => {
 
     const title = taskTitle.value;
     const description = taskDescription.value;
+    const status = taskStatus.value;
     
-    if (title && description) {
-        await addTask(title, description);
+    if (title && description && status) {
+        await addTask(title, description, status);
         taskTitle.value = '';
         taskDescription.value = '';
+        taskStatus.value = 'Pendiente';  // Resetear el estado al agregar nueva tarea
         loadTasks();
     }
 });
 
 // Función para agregar tarea a Firestore
-async function addTask(title, description) {
+async function addTask(title, description, status) {
     try {
         await addDoc(collection(db, 'tareas'), {
             titulo: title,
             descripcion: description,
-            estado: 'Pendiente',  // Estado inicial de la tarea
+            estado: status,
             fecha: new Date().toISOString()
         });
         console.log("Tarea agregada!");
@@ -66,7 +69,7 @@ async function loadTasks() {
                 <h3>${task.titulo}</h3>
                 <p>${task.descripcion}</p>
                 <small>${task.fecha}</small>
-                <select onchange="updateTaskStatus('${taskId}', this.value)">
+                <select onchange="updateTaskStatus('${taskId}', this.value)" value="${task.estado}">
                     <option value="Pendiente" ${task.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                     <option value="En Proceso" ${task.estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
                     <option value="Completado" ${task.estado === 'Completado' ? 'selected' : ''}>Completado</option>
@@ -105,5 +108,6 @@ async function deleteTask(taskId) {
 
 // Cargar las tareas cuando se carga la página
 loadTasks();
+
 
 
