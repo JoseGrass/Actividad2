@@ -59,7 +59,7 @@ async function addTask(title, description, status) {
 async function loadTasks() {
     try {
         const querySnapshot = await getDocs(collection(db, 'tareas'));
-        taskList.innerHTML = '';
+        taskList.innerHTML = '';  // Limpiar lista antes de agregar nuevas tareas
         querySnapshot.forEach(doc => {
             const task = doc.data();
             const taskId = doc.id;  // ID del documento
@@ -69,13 +69,14 @@ async function loadTasks() {
                 <h3>${task.titulo}</h3>
                 <p>${task.descripcion}</p>
                 <small>${task.fecha}</small>
-                <select onchange="updateTaskStatus('${taskId}', this.value)" value="${task.estado}">
-                    <option value="Pendiente" ${task.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                    <option value="En Proceso" ${task.estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
-                    <option value="Completado" ${task.estado === 'Completado' ? 'selected' : ''}>Completado</option>
-                </select>
-                <button onclick="deleteTask('${taskId}')">Borrar</button>
+                <p><strong>Estado:</strong> <span id="estado-${taskId}" class="task-status">${task.estado}</span></p>
+                <button onclick="deleteTask('${taskId}')">Eliminar</button>
             `;
+            
+            // Asignar el event listener para cambiar el estado de la tarea
+            const statusSpan = taskItem.querySelector(`#estado-${taskId}`);
+            statusSpan.addEventListener('click', () => updateTaskStatus(taskId, statusSpan));
+            
             taskList.appendChild(taskItem);
         });
     } catch (e) {
@@ -84,13 +85,19 @@ async function loadTasks() {
 }
 
 // Función para actualizar el estado de una tarea
-async function updateTaskStatus(taskId, newStatus) {
-    try {
-        const taskRef = doc(db, 'tareas', taskId);  // Referencia al documento de la tarea
-        await updateDoc(taskRef, { estado: newStatus });  // Actualización del estado
-        console.log("Estado de tarea actualizado a:", newStatus);
-    } catch (e) {
-        console.error("Error al actualizar estado: ", e);
+async function updateTaskStatus(taskId, statusElement) {
+    const newStatus = prompt("Ingresa el nuevo estado (Pendiente, En Proceso, Completado):", statusElement.textContent);
+    if (newStatus && ["Pendiente", "En Proceso", "Completado"].includes(newStatus)) {
+        try {
+            const taskRef = doc(db, 'tareas', taskId);  // Referencia al documento de la tarea
+            await updateDoc(taskRef, { estado: newStatus });  // Actualización del estado
+            statusElement.textContent = newStatus;  // Actualizar en la UI
+            console.log("Estado de tarea actualizado a:", newStatus);
+        } catch (e) {
+            console.error("Error al actualizar estado: ", e);
+        }
+    } else {
+        alert("Estado inválido.");
     }
 }
 
@@ -108,6 +115,4 @@ async function deleteTask(taskId) {
 
 // Cargar las tareas cuando se carga la página
 loadTasks();
-
-
 
