@@ -3,31 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Menú Semanal</title>
+    <title>Lista de Pendientes</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Generador de Menú Semanal</h1>
+    <h1>Lista de Pendientes</h1>
 
-    <!-- Formulario para preferencias -->
-    <form id="preferences-form">
-        <label>
-            <input type="checkbox" id="vegetariano"> Vegetariano
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="sin-gluten"> Sin Gluten
-        </label>
-        <br>
-        <label for="calorias">Calorías máximo:</label>
-        <input type="number" id="calorias" min="1" placeholder="Ejemplo: 500">
-        <br>
-        <button type="submit">Generar Menú</button>
+    <form id="task-form">
+        <input type="text" id="task-title" placeholder="Título de la tarea" required>
+        <textarea id="task-description" placeholder="Descripción de la tarea" required></textarea>
+        <button type="submit">Agregar Tarea</button>
     </form>
 
-    <!-- Contenedor donde se mostrará el menú -->
-    <div id="menu-container"></div>
+    <div id="task-list"></div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
+
+
+
