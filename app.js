@@ -1,6 +1,6 @@
 // Configuración de Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 // Configuración de Firebase (reemplaza con tus credenciales)
 const firebaseConfig = {
@@ -43,7 +43,7 @@ async function addTask(title, description) {
         await addDoc(collection(db, 'tareas'), {
             titulo: title,
             descripcion: description,
-            estado: 'Pendiente',
+            estado: 'Pendiente',  // Estado inicial de la tarea
             fecha: new Date().toISOString()
         });
         console.log("Tarea agregada!");
@@ -59,20 +59,19 @@ async function loadTasks() {
         taskList.innerHTML = '';
         querySnapshot.forEach(doc => {
             const task = doc.data();
-            const taskId = doc.id;
+            const taskId = doc.id;  // ID del documento
             const taskItem = document.createElement('div');
             taskItem.classList.add('task-item');
             taskItem.innerHTML = `
                 <h3>${task.titulo}</h3>
                 <p>${task.descripcion}</p>
-                <small>Fecha: ${task.fecha}</small>
-                <p>Estado: ${task.estado}</p>
+                <small>${task.fecha}</small>
                 <select onchange="updateTaskStatus('${taskId}', this.value)">
                     <option value="Pendiente" ${task.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
                     <option value="En Proceso" ${task.estado === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
                     <option value="Completado" ${task.estado === 'Completado' ? 'selected' : ''}>Completado</option>
                 </select>
-                <button onclick="deleteTask('${taskId}')">Eliminar</button>
+                <button onclick="deleteTask('${taskId}')">Borrar</button>
             `;
             taskList.appendChild(taskItem);
         });
@@ -84,8 +83,8 @@ async function loadTasks() {
 // Función para actualizar el estado de una tarea
 async function updateTaskStatus(taskId, newStatus) {
     try {
-        const taskRef = doc(db, 'tareas', taskId);
-        await updateDoc(taskRef, { estado: newStatus });
+        const taskRef = doc(db, 'tareas', taskId);  // Referencia al documento de la tarea
+        await updateDoc(taskRef, { estado: newStatus });  // Actualización del estado
         console.log("Estado de tarea actualizado a:", newStatus);
     } catch (e) {
         console.error("Error al actualizar estado: ", e);
@@ -95,10 +94,10 @@ async function updateTaskStatus(taskId, newStatus) {
 // Función para eliminar una tarea
 async function deleteTask(taskId) {
     try {
-        const taskRef = doc(db, 'tareas', taskId);
-        await deleteDoc(taskRef);
-        console.log("Tarea eliminada con ID:", taskId);
-        loadTasks();  // Recargar las tareas después de eliminar
+        const taskRef = doc(db, 'tareas', taskId);  // Referencia al documento de la tarea
+        await deleteDoc(taskRef);  // Eliminación del documento
+        console.log("Tarea eliminada!");
+        loadTasks();  // Recargar tareas después de eliminar
     } catch (e) {
         console.error("Error al eliminar tarea: ", e);
     }
@@ -106,4 +105,5 @@ async function deleteTask(taskId) {
 
 // Cargar las tareas cuando se carga la página
 loadTasks();
+
 
