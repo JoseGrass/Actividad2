@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Men&uacute;s Semanales</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Generador de Men&uacute;s Semanales</h1>
+    <form id="preferences-form">
+        <label>
+            <input type="checkbox" id="vegetariano"> Vegetariano
+        </label>
+        <label>
+            <input type="checkbox" id="sin-gluten"> Sin Gluten
+        </label>
+        <label>
+            Calor&iacute;as m&aacute;ximas:
+            <input type="number" id="calorias" placeholder="Ej: 500">
+        </label>
+        <button type="submit">Generar Men&uacute;</button>
+    </form>
+    <div id="menu-container"></div>
+    <button id="export-button">Exportar Ingredientes</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
